@@ -55,5 +55,72 @@
     });
 </script>
 
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+import { getFirestore, collection, query, where, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-functions.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCF6IX5j5o1QFTqALBNXHyJ_Fr7B0Rwr_U",
+    authDomain: "atlaspay-f5cad.firebaseapp.com",
+    projectId: "atlaspay-f5cad",
+    storageBucket: "atlaspay-f5cad.firebasestorage.app",
+    messagingSenderId: "195082315144",
+    appId: "1:195082315144:web:ffe7033ff1895349ac463d",
+    measurementId: "G-SPKZN1LNMM"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const functions = getFunctions(app);
+
+document.querySelector("form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const cpf = document.getElementById("cpf").value;
+    const senha = document.getElementById("senha").value;
+
+    try {
+        const usersRef = collection(db, "usuarios");
+        const q = query(usersRef, where("cpf", "==", cpf));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+            alert("CPF não encontrado!");
+            return;
+        }
+
+        const docRef = snapshot.docs[0].ref;
+        const userData = snapshot.docs[0].data();
+
+        if (userData.senha !== senha) {
+            alert("Senha incorreta!");
+            return;
+        }
+
+        // Gerar o codigo
+        const codigo = Math.floor(100000 + Math.random() * 900000).toString();
+
+        // salva o codigo
+        await updateDoc(docRef, {
+            codigoLogin: codigo,
+            codigoExpira: Date.now() + 5 * 60000 // 5 minutos
+        });
+        const enviarEmail = httpsCallable(functions, "enviarCodigo");
+        await enviarEmail({ email: userData.email, codigo });
+
+        // me manda para a pagina de confirmação
+        localStorage.setItem("cpfLogin", cpf);
+        window.location.href = "verificar.html";
+
+    } catch (err) {
+        console.error(err);
+        alert("Erro ao fazer login.");
+    }
+});
+</script>
+
+
+
 </body>
 </html>
