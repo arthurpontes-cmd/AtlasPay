@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="form.css">
+    <link rel="icon" href="src/logo.ico" type="image/x-icon">
+</head>
+<body>
+
+    <div class="form-container">
+        <div class="form-box">
+
+            <img src="src/logo.png" alt="logo" class="logo">
+
+            <h2>Entrar na sua conta</h2>
+
+            <form>
+
+                <div class="input-group">
+                    <input type="text" id="cpf" required>
+                    <label for="cpf">CPF</label>
+                </div>
+
+                <div class="input-group">
+                    <input type="password" id="senha" required>
+                    <label for="senha">Senha</label>
+                </div>
+
+                <button class="form-btn">Entrar</button>
+
+                <div class="links">
+                    <a href="#">Esqueceu sua senha?</a>
+                    <p>Não tem conta? <a href="cadastro.html">Cadastre-se</a></p>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+<script>
+    const cpfInput = document.getElementById('cpf');
+    cpfInput.addEventListener('input', function () {
+        let value = cpfInput.value.replace(/\D/g, '');
+
+        if (value.length > 3 && value.length <= 6)
+            value = value.replace(/(\d{3})(\d{1,})/, '$1.$2');
+        else if (value.length > 6 && value.length <= 9)
+            value = value.replace(/(\d{3})(\d{3})(\d{1,})/, '$1.$2.$3');
+        else if (value.length > 9)
+            value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,})/, '$1.$2.$3-$4');
+
+        cpfInput.value = value;
+    });
+</script>
+
+</body>
+</html>
