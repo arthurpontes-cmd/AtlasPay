@@ -16,7 +16,7 @@
 
             <h2>Entrar na sua conta</h2>
 
-            <form>
+            <form id="loginForm">
 
                 <div class="input-group">
                     <input type="text" id="cpf" required>
@@ -28,7 +28,7 @@
                     <label for="senha">Senha</label>
                 </div>
 
-                <button class="form-btn">Entrar</button>
+                <button class="form-btn" type="submit">Entrar</button>
 
                 <div class="links">
                     <a href="#">Esqueceu sua senha?</a>
@@ -57,70 +57,66 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-import { getFirestore, collection, query, where, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
-import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-functions.js";
+import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
+/* ------------------ CONFIG FIREBASE ------------------ */
 const firebaseConfig = {
-    apiKey: "AIzaSyCF6IX5j5o1QFTqALBNXHyJ_Fr7B0Rwr_U",
-    authDomain: "atlaspay-f5cad.firebaseapp.com",
-    projectId: "atlaspay-f5cad",
-    storageBucket: "atlaspay-f5cad.firebasestorage.app",
-    messagingSenderId: "195082315144",
-    appId: "1:195082315144:web:ffe7033ff1895349ac463d",
-    measurementId: "G-SPKZN1LNMM"
+  apiKey: "SUA_API_KEY",
+  authDomain: "atlaspay-f5cad.firebaseapp.com",
+  projectId: "atlaspay-f5cad",
+  storageBucket: "atlaspay-f5cad.firebasestorage.app",
+  messagingSenderId: "195082315144",
+  appId: "1:195082315144:web:16ba1626f99bf742ac463d",
+  measurementId: "G-2FW6B8CM47"
 };
 
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 const db = getFirestore(app);
-const functions = getFunctions(app);
 
-document.querySelector("form").addEventListener("submit", async (e) => {
+/* ------------------ LOGIN ------------------ */
+const loginForm = document.getElementById("loginForm");
+
+loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const cpf = document.getElementById("cpf").value;
+    const cpf = document.getElementById("cpf").value.trim();
     const senha = document.getElementById("senha").value;
 
     try {
-        const usersRef = collection(db, "usuarios");
-        const q = query(usersRef, where("cpf", "==", cpf));
-        const snapshot = await getDocs(q);
+        // 🔍 Busca o usuário pelo CPF
+        const usuariosRef = collection(db, "usuarios");
+        const q = query(usuariosRef, where("cpf", "==", cpf));
+        const snap = await getDocs(q);
 
-        if (snapshot.empty) {
-            alert("CPF não encontrado!");
+        if (snap.empty) {
+            alert("CPF não encontrado.");
             return;
         }
 
-        const docRef = snapshot.docs[0].ref;
-        const userData = snapshot.docs[0].data();
+        const userData = snap.docs[0].data();
+        const email = userData.email; // Login REAL é por email
 
-        if (userData.senha !== senha) {
-            alert("Senha incorreta!");
+        // 🔐 Login com email + senha
+        const userCredential = await signInWithEmailAndPassword(auth, email, senha);
+
+        // Verifica se o email está verificado
+        if (!userCredential.user.emailVerified) {
+            alert("Verifique seu email antes de entrar.");
+            await signOut(auth);
             return;
         }
 
-        // Gerar o codigo
-        const codigo = Math.floor(100000 + Math.random() * 900000).toString();
+        alert("Login realizado com sucesso!");
+        window.location.href = "paginaProtegida.html";
 
-        // salva o codigo
-        await updateDoc(docRef, {
-            codigoLogin: codigo,
-            codigoExpira: Date.now() + 5 * 60000 // 5 minutos
-        });
-        const enviarEmail = httpsCallable(functions, "enviarCodigo");
-        await enviarEmail({ email: userData.email, codigo });
-
-        // me manda para a pagina de confirmação
-        localStorage.setItem("cpfLogin", cpf);
-        window.location.href = "verificar.html";
-
-    } catch (err) {
-        console.error(err);
-        alert("Erro ao fazer login.");
+    } catch (error) {
+        console.error(error);
+        alert("Erro no login: " + error.message);
     }
 });
 </script>
-
-
 
 </body>
 </html>
