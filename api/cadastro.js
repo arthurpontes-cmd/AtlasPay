@@ -1,40 +1,47 @@
-import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { initializeApp, cert, getApps } from "firebase-admin/app";
+import { getAuth } from "firebase-admin/auth";
+import { getFirestore } from "firebase-admin/firestore";
 
-const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY,
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.FIREBASE_PROJECT_ID,
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.FIREBASE_APP_ID,
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+if (!getApps().length) {
+  initializeApp({
+    credential: cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY)),
+  });
+}
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Método não permitido" });
   }
 
-  const { nome, cpf, email, senha } = req.body;
-
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
+    const { nome, cpf, email, senha } = req.body;
 
-    await sendEmailVerification(userCredential.user);
-
-    await setDoc(doc(db, "usuarios", userCredential.user.uid), {
-      nome,
-      cpf,
+    // Criar usuário na autenticação Firebase
+    const user = await getAuth().createUser({
       email,
-      criado_em: new Date(),
+      password: senha,
+      displayName: nome,
     });
 
-    return res.status(200).json({ message: "Usuário cadastrado com sucesso!" });
+    // Gerar link de verificação do Firebase
+    const verificationLink = await getAuth().generateEmailVerificationLink(email);
+
+    // Salvar dados no Firestore
+    await getFirestore()
+      .collection("usuarios")
+      .doc(user.uid)
+      .set({
+        nome,
+        cpf,
+        email,
+        criado_em: new Date(),
+        verificado: false,
+      });
+
+    return res.status(200).json({
+      message: "Usuário criado com sucesso!",
+      verificar_email: verificationLink, // opcional: enviar via e-mail SMTP
+    });
 
   } catch (error) {
     console.error(error);

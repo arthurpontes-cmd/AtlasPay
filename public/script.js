@@ -1,4 +1,4 @@
-document.getElementById("formCadastro").addEventListener("submit", async (e) => {
+document.getElementById("Cadastro").addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const nome = document.getElementById("nome").value;
@@ -7,23 +7,13 @@ document.getElementById("formCadastro").addEventListener("submit", async (e) => 
     const senha = document.getElementById("senha").value;
 
     try {
-        const response = await fetch("https://atlas-pay.vercel.app/", {
+        const response = await fetch("https://atlas-pay.vercel.app/api/cadastro", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ nome, cpf, email, senha })
         });
 
-        // Lê como texto para evitar erro
-        const text = await response.text();
-
-        let data;
-        try {
-            data = JSON.parse(text); // transforma em JSON
-        } catch {
-            alert("Erro inesperado no servidor!");
-            console.log("Resposta bruta:", text);
-            return;
-        }
+        const data = await response.json();
 
         if (response.ok) {
             alert("Usuário cadastrado com sucesso! Verifique seu email.");
