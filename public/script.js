@@ -13,7 +13,16 @@ document.getElementById("Cadastro").addEventListener("submit", async (e) => {
             body: JSON.stringify({ nome, cpf, email, senha })
         });
 
-        const data = await response.json();
+        const text = await response.text(); 
+        console.log("Resposta bruta:", text);
+
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch {
+            alert("Erro: resposta inesperada do servidor.");
+            return;
+        }
 
         if (response.ok) {
             alert("Usuário cadastrado com sucesso! Verifique seu email.");
