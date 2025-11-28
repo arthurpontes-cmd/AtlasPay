@@ -1,0 +1,46 @@
+
+.box {
+    box-shadow: 0 0 10px rgba(0,0,0, 0.2);
+    margin-bottom: 20px;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    border-radius: 20px;
+    margin: 20px;
+    padding: 15px;
+}
+
+.titulo {
+    display: flex;
+    color: #CBC3E3;
+    margin: 20px;
+    margin-top: 20px;
+}
+.sub {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+.menu {
+    display: flex;
+    justify-content: right;
+    text-align: right;
+    position: absolute; 
+    top: 30px; 
+    right: 35px;
+    margin: 20px;
+}
+h3 {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    color: #CBC3E3;
+}
+ol {
+    display: flex;
+}
+li {
+    display: flex;
+    box-shadow: 0 0 10px rgba(0,0,0, 0.2);
+    margin: 20px;
+}
