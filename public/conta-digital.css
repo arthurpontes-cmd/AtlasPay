@@ -1,4 +1,7 @@
 
+body { 
+    background-color: #CBC3E3;
+}
 .box {
     box-shadow: 0 0 10px rgba(0,0,0, 0.2);
     margin-bottom: 20px;
@@ -8,11 +11,12 @@
     border-radius: 20px;
     margin: 20px;
     padding: 15px;
+    background-color: #ffffff;
 }
 
 .titulo {
     display: flex;
-    color: #CBC3E3;
+    color: #bbb2d4;
     margin: 20px;
     margin-top: 20px;
 }
@@ -29,18 +33,32 @@
     top: 30px; 
     right: 35px;
     margin: 20px;
+    font-size: 40px;
+    cursor: pointer;
 }
 h3 {
     text-align: center;
     margin-top: 30px;
     margin-bottom: 30px;
-    color: #CBC3E3;
+    color: #000000;
 }
+
+p h1{
+    margin: 10%;
+}
+
 ol {
     display: flex;
+    justify-content: center;
+    align-items: center;
 }
 li {
     display: flex;
     box-shadow: 0 0 10px rgba(0,0,0, 0.2);
     margin: 20px;
+    padding: 20px;
+    margin: 5%;
+    background-color: #bbb2d4;
+    border-radius: 12px;
+    cursor: pointer;
 }
