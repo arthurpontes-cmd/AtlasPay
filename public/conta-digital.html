@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sua conta</title>
     <link rel="stylesheet" href="conta-digital.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
     <div class="box">
@@ -14,14 +15,83 @@
         <p>Saldo Atual</p>
         <h1> R$ 16.700,90</h1>
         <div>
-            <ol>
-                <li>Area Pix</li>
-                <li>Boleto</li>
-                <li>Caixinha</li>
-                <li>Pegar emprestado</li>
+            <ol class="colunas">
+                <li>
+                    <i class="fa-solid fa-qrcode"></i>
+                    <span>Area Pix</span>
+                </li>
+                <li>
+                    <i class="fa-solid fa-barcode"></i>
+                    <span>Boleto</span>
+                </li>
+                <li>
+                    <i class="fa-solid fa-box-archive"></i>
+                    <span>Caixinha</span>
+                </li>
+                <li>
+                    <i class="fa-solid fa-hand-holding-dollar"></i>
+                    <span>Pegar emprestado</span>
+                </li>
             </ol>
         </div>
     </div>
-        <h3> Historico de transferencias</h3>
+    <div class="box-historico">
+
+        <h2> Historico de transferencias</h2>
+
+        <ul class="lista-historico">
+            <li class="transferencia">
+                <div class="detalhes">
+                    <div class="descricao"> Pagamento de conta - Luz</div>
+                    <div class="data"> 28 de Novembro, 14:30</div>
+                </div>
+                <div class="valor saida">
+                    - R$ 150,89
+                </div>
+            </li>
+
+            <li class="transferencia">
+                <div class="detalhes">
+                    <div class="descricao"> Transferência Recebida - João D.</div>
+                    <div class="data"> 29 de Novembro, 16:30</div>
+                </div>
+                <div class="valor entrada">
+                    + R$ 200
+                </div>
+            </li>
+
+            <li class="transferencia">
+                <div class="detalhes">
+                    <div class="descricao">Compra Online - Shopee</div>
+                    <div class="data">27 de Novembro, 20:05</div>
+                </div>
+                <div class="valor saida">
+                    - R$ 108,00
+                </div>
+            </li>
+
+            <li class="transferencia">
+                <div class="detalhes">
+                    <div class="descricao">Saque Eletrônico - Banco 24h</div>
+                    <div class="data">26 de Novembro, 09:00</div>
+                </div>
+                <div class="valor saida">
+                    - R$ 200,00
+                </div>
+            </li>
+
+            <li class="transferencia">
+                <div class="detalhes">
+                    <div class="descricao">Crédito Salarial - Empresa XYZ</div>
+                    <div class="data">25 de Novembro, 08:00</div>
+                </div>
+                <div class="valor entrada">
+                    + R$ 3.500,00
+                </div>
+            </li>
+
+        </ul>
+    </div>
+
 </body>
 </html>
