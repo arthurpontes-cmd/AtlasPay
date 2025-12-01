@@ -42,12 +42,13 @@
       <div class="links">
         <p>Já tem uma conta? <a href="login.html">Entrar</a></p>
       </div>
+
     </form>
   </div>
 </div>
 
+<!-- MÁSCARA DO CPF -->
 <script>
-  // Máscara do CPF
   const cpfInput = document.getElementById("cpf");
   cpfInput.addEventListener("input", function () {
     let value = cpfInput.value.replace(/\D/g, "");
@@ -59,40 +60,57 @@
       value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,})/, "$1.$2.$3-$4");
     cpfInput.value = value;
   });
+</script>
 
-  const form = document.getElementById("cadastroForm");
+<!-- FIREBASE CADASTRO -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword } 
+    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import { getFirestore, doc, setDoc } 
+    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  form.addEventListener("submit", async (e) => {
+  const firebaseConfig = {
+    apiKey: "AIzaSyCF6IX5j5o1QFTqALBNXHyJ_Fr7B0Rwr_U",
+    authDomain: "atlaspay-f5cad.firebaseapp.com",
+    projectId: "atlaspay-f5cad",
+    storageBucket: "atlaspay-f5cad.firebasestorage.app",
+    messagingSenderId: "195082315144",
+    appId: "1:195082315144:web:16ba1626f99bf742ac463d",
+    measurementId: "G-2FW6B8CM47"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  document.getElementById("cadastroForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const nome = document.getElementById("nome").value.trim();
-    const cpf = document.getElementById("cpf").value.trim();
+    const cpf = document.getElementById("cpf").value.trim().replace(/\D/g, ""); 
     const email = document.getElementById("email").value.trim();
     const senha = document.getElementById("senha").value;
 
     try {
-      const resposta = await fetch("/api/cadastro", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome, cpf, email, senha }),
+      const cred = await createUserWithEmailAndPassword(auth, email, senha);
+
+      await setDoc(doc(db, "usuarios", cred.user.uid), {
+        nome,
+        cpf,
+        email
       });
 
-      const resultado = await resposta.json();
-
-      if (!resposta.ok) {
-        alert("Erro: " + resultado.error);
-        return;
-      }
-
-      alert("Cadastro realizado! Verifique seu e-mail para confirmar.");
+      alert("Cadastro realizado com sucesso!");
 
       window.location.href = "login.html";
 
     } catch (error) {
-      alert("Erro ao enviar dados: " + error);
+      alert("Erro ao cadastrar: " + error.message);
+      console.log(error);
     }
   });
 </script>
-<script src="../api/cadastro.js"></script>
+
 </body>
 </html>
