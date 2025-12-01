@@ -65,7 +65,7 @@
 <!-- FIREBASE CADASTRO -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } 
+  import { getAuth, createUserWithEmailAndPassword } 
     from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
   import { getFirestore, doc, setDoc } 
     from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -84,30 +84,24 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  // Evento do formulário de cadastro
   document.getElementById("cadastroForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const nome = document.getElementById("nome").value.trim();
-    const cpf = document.getElementById("cpf").value.trim().replace(/\D/g, ""); // CPF sem máscara
+    const cpf = document.getElementById("cpf").value.trim().replace(/\D/g, ""); 
     const email = document.getElementById("email").value.trim();
     const senha = document.getElementById("senha").value;
 
     try {
-      // Criar usuário no Auth
       const cred = await createUserWithEmailAndPassword(auth, email, senha);
 
-      // Enviar e-mail de verificação
-      await sendEmailVerification(cred.user);
-
-      // Salvar dados no Firestore
       await setDoc(doc(db, "usuarios", cred.user.uid), {
         nome,
         cpf,
         email
       });
 
-      alert("Cadastro realizado! Verifique seu e-mail para continuar.");
+      alert("Cadastro realizado com sucesso!");
 
       window.location.href = "login.html";
 

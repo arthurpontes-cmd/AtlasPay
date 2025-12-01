@@ -56,7 +56,6 @@ cpfInput.addEventListener('input', function () {
 });
 </script>
 
-<!-- FIREBASE LOGIN -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword } 
@@ -85,7 +84,6 @@ cpfInput.addEventListener('input', function () {
         const senha = document.getElementById("senha").value;
 
         try {
-            // 1️⃣ Buscar usuário pelo CPF
             const q = query(
                 collection(db, "usuarios"),
                 where("cpf", "==", cpfDigitado)
@@ -98,20 +96,11 @@ cpfInput.addEventListener('input', function () {
                 return;
             }
 
-            // PEGAR DADOS DO USUÁRIO
             const dados = resultado.docs[0].data();
             const emailUsuario = dados.email;
 
-            // 2️⃣ Logar usando email + senha
-            const cred = await signInWithEmailAndPassword(auth, emailUsuario, senha);
-
-            // 3️⃣ Checar verificação de e-mail
-            if (!cred.user.emailVerified) {
-                alert("Seu e-mail ainda não foi verificado. Verifique sua caixa de entrada.");
-                return;
-            }
-
-            // 4️⃣ Redirecionar
+            await signInWithEmailAndPassword(auth, emailUsuario, senha);
+            
             window.location.href = "home.html";
 
         } catch (error) {
