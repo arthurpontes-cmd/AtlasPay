@@ -98,7 +98,8 @@
       await setDoc(doc(db, "usuarios", cred.user.uid), {
         nome,
         cpf,
-        email
+        email,
+        criado_em: serverTimestamp()
       });
 
       alert("Cadastro realizado com sucesso!");
