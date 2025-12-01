@@ -65,43 +65,98 @@ li.dropdown {
   position: static;
 }
 
+/* CONTAINER DO DROPDOWN */
 li.dropdown > ul.dropdown-menu {
-  opacity: 0;
-  pointer-events: none;
-  position: absolute;
-  left: 0;
-  top: calc(100% - 5px);
-  width: 100%;
-  transform: translateY(-15px);
-  background: #fff;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  z-index: 10;
-  padding: 40px 80px;
-  min-height: 400px;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 60px;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  display: grid;
+    /* Mágica do Flexbox: se adapta a qualquer quantidade de itens */
+    display: flex;
+    justify-content: space-evenly; /* Distribui os itens igualmente no espaço */
+    align-items: flex-start; /* Alinha todos pelo topo */
+    width: 100%;
+    
+    /* Estilo Visual (Mantido do seu original) */
+    position: absolute;
+    left: 0;
+    top: calc(100% - 5px);
+    padding: 40px 20px; /* Ajustei o padding lateral para caber melhor */
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    z-index: 10;
+    
+    /* Animação (Mantida) */
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-15px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
+/* Garante que o menu apareça */
 li.dropdown > ul.dropdown-menu.show {
-  opacity: 1;
-  pointer-events: all;
-  transform: translateY(0);
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0);
 }
 
-ul.dropdown-menu > li {
-  opacity: 0;
-  transform: translateY(-15px);
-  transition: all 0.4s ease;
+/* CADA ITEM DA LISTA (O Espaço invisível de cada botão) */
+li.dropdown > ul.dropdown-menu > li {
+    flex: 1; /* Faz todos os itens tentarem ter o mesmo tamanho */
+    display: flex;
+    justify-content: center;
+    
+    /* Animação dos itens */
+    opacity: 0;
+    transform: translateY(-15px);
+    transition: all 0.4s ease;
+}
+
+li.dropdown > ul.dropdown-menu.show > li {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* O LINK DENTRO (Imagem em cima, Texto embaixo) */
+.dropdown-menu li a {
+    display: flex;
+    flex-direction: column; /* Coloca um em cima do outro */
+    align-items: center;    /* Centraliza no meio */
+    text-align: center;
+    text-decoration: none;
+    color: #444;
+    width: 100%;
+}
+
+/* Controle do tamanho da imagem */
+.dropdown-menu li a img {
+    height: 120px; /* Tamanho fixo para ficar padronizado */
+    width: auto;
+    margin-bottom: 12px; /* Espaço entre imagem e texto */
+    transition: transform 0.3s ease;
+}
+
+/* Efeito ao passar o mouse */
+.dropdown-menu li a:hover img {
+    transform: scale(1.1);
+}
+.dropdown-menu li a:hover {
+    color: #5b3ef0;
 }
 
 li.dropdown > ul.dropdown-menu.show > li {
   opacity: 1;
   transform: translateY(0);
+  display: flex;
+  justify-content: center;
+  width: 100%; /* Garante que use o espaço da coluna */
 }
+.dropdown-menu li a{
+  display: flex;
+    flex-direction: column; 
+    align-items: center;    
+    text-align: center;
+    justify-content: flex-start; /* Alinha no topo */
+}
+
 
 .dropdown-menu h4 {
   font-size: 1.1rem;
