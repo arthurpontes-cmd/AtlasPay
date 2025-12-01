@@ -5,7 +5,7 @@
     font-family: "Inter", Arial, sans-serif;
 }
 body {
-    background-color: #CBC3E3;
+    background-color: #5b3ef0;
 }
 
 .btn-inicio {
@@ -139,7 +139,7 @@ body {
 
 .action-item i {
     font-size: 24px;
-    color: #5b3ef0;
+    color: #011936;
     cursor: pointer;
 }
 
