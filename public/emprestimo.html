@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas Pay - Empréstimos</title>
+    <link rel="stylesheet" href="styles.css"> <link rel="stylesheet" href="loan.css">   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="emprestimo.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Voltar ao Início</a></li>
+            </ul>
+        </nav>
+        <div class="sidebar">
+                <a href="login.html" class="entrar">Acessar Conta</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="loan-hero">
+            <div class="hero-content">
+                <h1>Realize seus sonhos com o <span class="highlight">Atlas Cash</span></h1>
+                <p>Crédito rápido, transparente e sem burocracia. Simule agora e receba a aprovação em minutos.</p>
+                <ul class="benefits-list">
+                    <li>✓ Dinheiro na conta em até 24h</li>
+                    <li>✓ Até 60 dias para começar a pagar</li>
+                    <li>✓ Taxas personalizadas</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="simulator-section">
+            <div class="simulator-card">
+                <h2>Simule seu Empréstimo</h2>
+                
+                <div class="input-group">
+                    <label>De quanto você precisa?</label>
+                    <div class="value-display" id="display-amount">R$ 5.000,00</div>
+                    <input type="range" id="range-amount" min="500" max="50000" step="500" value="5000">
+                    <div class="range-labels">
+                        <span>R$ 500</span>
+                        <span>R$ 50.000</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Em quantos meses?</label>
+                    <div class="value-display"><span id="display-months">12</span>x</div>
+                    <input type="range" id="range-months" min="3" max="60" step="1" value="12">
+                    <div class="range-labels">
+                        <span>3 meses</span>
+                        <span>60 meses</span>
+                    </div>
+                </div>
+
+                <div class="result-box">
+                    <p>Valor aproximado da parcela:</p>
+                    <div class="monthly-price" id="monthly-result">R$ 495,00</div>
+                    <small>*Sujeito a análise de crédito.</small>
+                </div>
+
+                <button class="btn-primary-large">Solicitar Empréstimo</button>
+            </div>
+        </section>
+
+        <section class="info-grid">
+            <div class="card-info">
+                <h3>Transparência</h3>
+                <p>Você sabe exatamente quanto vai pagar. Sem taxas escondidas ou surpresas no final do mês.</p>
+            </div>
+            <div class="card-info">
+                <h3>Flexibilidade</h3>
+                <p>Escolha a data de vencimento que melhor se adapta ao seu fluxo de caixa.</p>
+            </div>
+            <div class="card-info">
+                <h3>100% Digital</h3>
+                <p>Faça tudo pelo app ou site. Sem filas, sem papelada e sem dor de cabeça.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-bottom">
+            <p>© 2025 Atlas Pay. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+    <script>
+        const rangeAmount = document.getElementById('range-amount');
+        const rangeMonths = document.getElementById('range-months');
+        const displayAmount = document.getElementById('display-amount');
+        const displayMonths = document.getElementById('display-months');
+        const monthlyResult = document.getElementById('monthly-result');
+
+        function calculateLoan() {
+            // Pega os valores
+            let amount = parseFloat(rangeAmount.value);
+            let months = parseInt(rangeMonths.value);
+            
+            // Taxa de juros fictícia (3% ao mês)
+            let rate = 0.03; 
+
+            // Cálculo simples de PRICE (Parcela fixa)
+            let monthlyPayment = (amount * rate) / (1 - Math.pow(1 + rate, -months));
+
+            // Atualiza os textos na tela
+            displayAmount.innerText = amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            displayMonths.innerText = months;
+            monthlyResult.innerText = monthlyPayment.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        // Ouve quando o usuário mexe nos sliders
+        rangeAmount.addEventListener('input', calculateLoan);
+        rangeMonths.addEventListener('input', calculateLoan);
+
+        // Roda uma vez ao carregar
+        calculateLoan();
+    </script>
+</body>
+</html>
+</body>
+</html>
