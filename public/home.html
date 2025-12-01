@@ -1,13 +1,166 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <link rel="stylesheet" href="sytles.css">
-    <link rel="ico" href="src/logo.ico">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atlas Pay - Home</title>
+  <link rel="stylesheet" href="home.css" />
 </head>
 <body>
+  <div class="home-wrapper">
+
+    <section class="header-home fade-in">
+      <div class="header-left">
+        <h1 id="greeting">Olá, usuário</h1>
+        <div class="saldo-box">
+          <p>Saldo disponível</p>
+          <div class="saldo-valor" id="balance">R$ 0,00</div>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <button class="btn ghost" id="btn-card">Ver cartão</button>
+        <button class="btn" id="btn-extrato">Extrato</button>
+        <button class="btn" id="btn-logout">Sair</button>
+      </div>
+    </section>
+
+    <section class="atalhos-grid" id="shortcuts">
+      <div class="atalho fade-in">Pix</div>
+      <div class="atalho fade-in">Pagar</div>
+      <div class="atalho fade-in">Transferir</div>
+      <div class="atalho fade-in">Depositar</div>
+      <div class="atalho fade-in">Cartão Virtual</div>
+      <div class="atalho fade-in">Investir</div>
+    </section>
+
+    <section class="cards-area">
+      <div class="card" id="card-1">
+        <div>
+          <h2>Cartão Atlas Pay</h2>
+          <p>Limite disponível</p>
+        </div>
+        <div class="fatura" id="card-limit">R$ 0,00</div>
+      </div>
+
+      <div class="card" id="card-2">
+        <div>
+          <h2>Investimentos</h2>
+          <p>Saldo em caixinhas e aplicações</p>
+        </div>
+        <div class="fatura" id="invest-balance">R$ 0,00</div>
+      </div>
+
+      <div class="card" id="card-3">
+        <div>
+          <h2>Boletos</h2>
+          <p>Boletos em aberto e gerados</p>
+        </div>
+        <div class="fatura" id="boleto-count">0</div>
+      </div>
+    </section>
+
+  </div>
+
+  <nav class="footer-nav">
+    <a href="#">Início</a>
+    <a href="cartao.html">Cartões</a>
+    <a href="#">Crédito</a>
+    <a href="#">Configurações</a>
+  </nav>
+
+
+  
+  <script type="module">
+
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+
+        
+     apiKey: "AIzaSyCF6IX5j5o1QFTqALBNXHyJ_Fr7B0Rwr_U",
+     authDomain: "atlaspay-f5cad.firebaseapp.com",
+     projectId: "atlaspay-f5cad",
+     storageBucket: "atlaspay-f5cad.firebasestorage.app",
+     messagingSenderId: "195082315144",
+     appId: "1:195082315144:web:16ba1626f99bf742ac463d",
+     measurementId: "G-2FW6B8CM47"
+
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+   
+    const greeting = document.getElementById('greeting');
+    const balanceEl = document.getElementById('balance');
+    const cardLimitEl = document.getElementById('card-limit');
+    const investBalanceEl = document.getElementById('invest-balance');
+    const boletoCountEl = document.getElementById('boleto-count');
+    const btnLogout = document.getElementById('btn-logout');
+
     
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = 'index.html'; 
+        return;
+      }
+
+      
+      try {
+        const userDocRef = doc(db, 'users', user.uid);
+        const snap = await getDoc(userDocRef);
+        if (snap.exists()) {
+          const data = snap.data();
+          
+          const name = data.displayName || user.email?.split('@')[0] || 'usuário';
+          greeting.textContent = `Olá, ${name}`;
+
+          const bal = Number(data.balance ?? 0).toFixed(2);
+          balanceEl.textContent = formatBRL(bal);
+
+          cardLimitEl.textContent = formatBRL(Number(data.cardLimit ?? 0).toFixed(2));
+          investBalanceEl.textContent = formatBRL(Number(data.investBalance ?? 0).toFixed(2));
+          boletoCountEl.textContent = String(data.boletoCount ?? 0);
+
+          document.querySelectorAll('.card').forEach((c, i) => setTimeout(()=>c.classList.add('show'), i*120));
+        } else {
+       
+          const name = user.email?.split('@')[0] || 'usuário';
+          greeting.textContent = `Olá, ${name}`;
+          balanceEl.textContent = 'R$ 0,00';
+        }
+      } catch (err) {
+        console.error('Erro ao buscar dados do usuário:', err);
+      }
+    });
+
+    
+    function formatBRL(value){
+    
+      const num = Number(value);
+      return num.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+    }
+
+    btnLogout.addEventListener('click', async ()=>{
+      try{
+        await signOut(auth);
+        window.location.href = 'index.html';
+      }catch(e){console.error(e)}
+    });
+
+
+    document.querySelectorAll('.atalho').forEach(a=>{
+      a.addEventListener('click', ()=>{
+        alert(`Você clicou em: ${a.textContent.trim()}`);
+      })
+    });
+
+  </script>
+
 </body>
 </html>
