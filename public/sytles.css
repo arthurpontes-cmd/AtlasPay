@@ -259,18 +259,6 @@ li.dropdown > ul.dropdown-menu.show > li {
   filter: brightness(0) invert(0.7) sepia(1) saturate(8) hue-rotate(260deg);
 }
 
-.social-icons a {
-  width: 25px;
-  height: 25px;
-  filter: brightness(0) invert(1);
-  transition: transform 0.3s;
-}
-
-.social-icons a {
-  transform: scale(1.1);
-  filter: brightness(0) invert(0.7) sepia(1) saturate(8) hue-rotate(260deg);
-}
-
 .footer-bottom {
   text-align: center;
   margin-top: 50px;
